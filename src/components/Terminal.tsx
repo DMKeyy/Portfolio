@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Terminal as TerminalIcon, Minimize2, X, GripVertical } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Move commands object outside component for better performance
 const COMMANDS = {
@@ -11,7 +12,9 @@ const COMMANDS = {
     '  contact  - Get my contact information',
     '  clear    - Clear the terminal',
     '  github   - Open my GitHub profile',
-    '  resume   - Download my resume'
+    '  resume   - Download my resume',
+    '  matrix   - Watch a cool matrix animation',
+    '  echo     - Echo back your input'
   ],
   about: () => [
     'Hello! I\'m a passionate full-stack developer',
@@ -40,7 +43,7 @@ const COMMANDS = {
     '🐙 GitHub: github.com/DMKeyy',
   ],
   clear: () => {
-    return [];
+    return 'CLEAR'; // Special flag to indicate clearing the terminal
   },
   github: () => {
     window.open('https://github.com/DMKeyy', '_blank');
@@ -80,6 +83,9 @@ const Terminal = ({ onClose }: TerminalProps) => {
   const [startY, setStartY] = useState(0);
   const [startHeight, setStartHeight] = useState(250);
   const [previousHeight, setPreviousHeight] = useState(250);
+  const [isMatrixActive, setIsMatrixActive] = useState(false);
+  const [matrixLines, setMatrixLines] = useState<string[]>([]);
+  const matrixIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [history, setHistory] = useState<string[]>([
     '$ Welcome to my portfolio terminal!',
@@ -87,6 +93,8 @@ const Terminal = ({ onClose }: TerminalProps) => {
     '$ Feel free to explore my work'
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Initialize terminal height CSS variable
     updateTerminalHeight(250);
@@ -97,6 +105,38 @@ const Terminal = ({ onClose }: TerminalProps) => {
     });
     return () => cancelAnimationFrame(timer);
   }, []);
+
+  // Matrix animation effect
+  useEffect(() => {
+    if (isMatrixActive) {
+      const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\'#&_(),.;:?!\\|{}<>[]^~';
+      const generateMatrixLine = () => {
+        let line = '';
+        for (let j = 0; j < 40; j++) {
+          line += matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        }
+        return line;
+      };
+
+      matrixIntervalRef.current = setInterval(() => {
+        setMatrixLines(prev => {
+          const newLines = [...prev, generateMatrixLine()];
+          if (newLines.length > 10) {
+            return newLines.slice(-10);
+          }
+          return newLines;
+        });
+      }, 100);
+
+      return () => {
+        if (matrixIntervalRef.current) {
+          clearInterval(matrixIntervalRef.current);
+        }
+      };
+    } else {
+      setMatrixLines([]);
+    }
+  }, [isMatrixActive]);
 
   const handleClose = () => {
     setIsAnimating(true);
@@ -109,9 +149,27 @@ const Terminal = ({ onClose }: TerminalProps) => {
     const [command, ...args] = cmd.toLowerCase().trim().split(' ');
     const commandFn = COMMANDS[command as keyof typeof COMMANDS];
     
+    if (command === 'matrix') {
+      setIsMatrixActive(!isMatrixActive);
+      if (!isMatrixActive) {
+        setHistory(prev => [...prev, `$ ${cmd}`, 'Matrix animation started. Type "matrix" again to stop.']);
+      } else {
+        setHistory(prev => [...prev, `$ ${cmd}`, 'Matrix animation stopped.']);
+      }
+      return;
+    }
+    
     if (commandFn) {
       let result = commandFn(args.join(' '));
-      setHistory(prev => [...prev, `$ ${cmd}`, ...(result || [])]);
+      if (result === 'CLEAR') {
+        setHistory([
+          '$ Welcome to my portfolio terminal!',
+          '$ Type "help" to see available commands',
+          '$ Feel free to explore my work'
+        ]);
+      } else {
+        setHistory(prev => [...prev, `$ ${cmd}`, ...(result || [])]);
+      }
     } else if (cmd.trim()) {
       setHistory(prev => [...prev, `$ ${cmd}`, `Command not found: ${command}. Type "help" for available commands.`]);
     }
@@ -132,14 +190,16 @@ const Terminal = ({ onClose }: TerminalProps) => {
   }, [isMinimized]);  
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (isMinimized) return; // Prevent resizing when minimized
     setIsDragging(true);
     setStartY(e.clientY);
     setStartHeight(terminalRef.current?.clientHeight || 250);
   };  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;      // Calculate total height from bottom to top menu bar (title bar + menu bar + top padding = 32+32+32 = 96px)
+      if (!isDragging || isMinimized) return;
+      
       const viewportHeight = window.innerHeight;
-      const maxHeight = viewportHeight - 96;  // account for title bar (32px) + menu bar (32px) + top padding (32px)
+      const maxHeight = viewportHeight - 96;
       
       const delta = startY - e.clientY;
       const newHeight = Math.max(150, Math.min(maxHeight, startHeight + delta));
@@ -165,38 +225,74 @@ const Terminal = ({ onClose }: TerminalProps) => {
     };
   }, [isDragging, startY, startHeight]);
 
+  // Auto-scroll to bottom when new content is added
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTo({
+        top: contentRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [history]);
+
   return (
-    <div 
+    <motion.div 
+      initial={{ y: '100%' }}
+      animate={{ y: 0 }}
+      exit={{ y: '100%' }}
+      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       className={`
-        fixed bottom-0 left-64 right-0
+        fixed bottom-0 left-[16rem] right-0
+        bg-[#1e1e1e]
         border-t border-l border-[#2d2d30]
         transform
-        ${isAnimating ? 'translate-y-full' : 'translate-y-0'}
       `}
-    >      <div 
-        onMouseDown={handleMouseDown}
-        className="h-1.5 cursor-ns-resize bg-[#2d2d30] hover:bg-[#404040] transition-colors flex items-center justify-center"
-      >
-        <GripVertical className="h-4 w-4 text-[#666] opacity-0 hover:opacity-100 transition-opacity" />
-      </div>        <div 
+    >
+      {!isMinimized && (
+        <motion.div 
+          onMouseDown={handleMouseDown}
+          className="h-1.5 cursor-ns-resize bg-[#2d2d30] hover:bg-[#404040] transition-colors flex items-center justify-center"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <GripVertical className="h-4 w-4 text-[#666] opacity-0 hover:opacity-100 transition-opacity" />
+        </motion.div>
+      )}
+      <motion.div 
         ref={terminalRef}
-        className={`          bg-[#1e1e1e]
+        animate={{ height: isMinimized ? 32 : startHeight }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        className={`
+          bg-[#1e1e1e]
           min-h-[32px]
-          h-[250px]
           max-h-[calc(100vh-96px)] 
           ${isDragging ? 'cursor-ns-resize select-none' : ''}
-        `}>
-        {/* Terminal Header */}
-        <div className="bg-[#2d2d30] px-3 py-1 flex items-center justify-between">
+        `}
+      >
+        <motion.div 
+          className="bg-[#2d2d30] px-3 py-1 flex items-center justify-between"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+        >
           <div className="flex items-center space-x-2">
-            <TerminalIcon className="w-4 h-4 text-[#cccccc]" />
+            <motion.div
+              initial={{ rotate: -180, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <TerminalIcon className="w-4 h-4 text-[#cccccc]" />
+            </motion.div>
             <span className="text-sm text-[#cccccc]">Terminal</span>
           </div>
-          <div className="flex items-center space-x-1">            <button
+          <div className="flex items-center space-x-1">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 if (!isMinimized) {
                   const currentHeight = terminalRef.current?.clientHeight || 250;
-                  updateTerminalHeight(32); // Just enough for the header
+                  updateTerminalHeight(32);
                   if (terminalRef.current) {
                     terminalRef.current.style.height = '32px';
                   }
@@ -212,43 +308,68 @@ const Terminal = ({ onClose }: TerminalProps) => {
               className="hover:bg-[#404040] p-1 rounded transition-colors"
             >
               <Minimize2 className="w-4 h-4 text-[#cccccc]" />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleClose}
               className="hover:bg-[#404040] p-1 rounded transition-colors"
             >
               <X className="w-4 h-4 text-[#cccccc]" />
-            </button>
+            </motion.button>
           </div>
-        </div>        {/* Terminal Content */}
-        {!isMinimized && (          <div className="terminal-content p-3 h-[calc(100%-32px)] overflow-y-auto font-mono text-sm">
-            <div className="space-y-1">
-              {history.map((line, index) => (
-                <div
-                  key={index}
-                  className={line.startsWith('$') ? 'text-[#4ec9b0]' : 'text-[#cccccc]'}
-                >
-                  {line}
+        </motion.div>
+        <AnimatePresence>
+          {!isMinimized && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="terminal-content p-3 h-[calc(100%-32px)] overflow-y-auto font-mono text-sm"
+              ref={contentRef}
+            >
+              <div className="space-y-1">
+                {history.map((line, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    className={line.startsWith('$') ? 'text-[#4ec9b0]' : 'text-[#cccccc]'}
+                  >
+                    {line}
+                  </motion.div>
+                ))}
+                {isMatrixActive && matrixLines.map((line, index) => (
+                  <motion.div
+                    key={`matrix-${index}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-[#00ff00]"
+                  >
+                    {line}
+                  </motion.div>
+                ))}
+              </div>
+              <form onSubmit={handleSubmit} className="mt-2">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[#4ec9b0]">$</span>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="flex-1 bg-transparent border-none outline-none text-[#cccccc]"
+                    autoFocus
+                  />
                 </div>
-              ))}
-            </div>
-            
-            {/* Input Line */}
-            <form onSubmit={handleSubmit} className="flex items-center mt-2">
-              <span className="text-[#4ec9b0] mr-2">$</span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-transparent text-[#cccccc] outline-none"
-                placeholder="Type a command..."
-              />
-            </form>
-          </div>
-        )}
-      </div>
-    </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 };
 

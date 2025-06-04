@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { User, MapPin, Calendar, Github, Linkedin, Mail, FileText } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const AboutTab = () => {
   const [lineNumbers, setLineNumbers] = useState<number[]>([]);
@@ -9,12 +10,10 @@ const AboutTab = () => {
 // I'm a passionate developer who loves creating amazing experiences
 
 const developer = {
-  name: "Your Name",
-  location: "Your City, Country",
-  experience: "X+ years",
+  name: "Haiouani Anis",
+  location: "Algiers, Algeria",
   passion: "Building innovative solutions",
-  currentlyLearning: ["React", "TypeScript", "Next.js"],
-  funFact: "I debug with console.log() 😄"
+  currentlyLearning: ["React", "TypeScript"]
 };
 
 export default developer;`;
@@ -49,20 +48,39 @@ export default developer;`;
   return (
     <div className="flex h-full bg-[#1e1e1e]">
       {/* Line Numbers */}
-      <div className="bg-[#1e1e1e] text-[#858585] text-sm font-mono p-4 select-none border-r border-[#2d2d30] min-w-12">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-[#1e1e1e] text-[#858585] text-sm font-mono p-4 select-none border-r border-[#2d2d30] min-w-12"
+      >
         {lineNumbers.map((num) => (
-          <div key={num} className="text-right pr-2" style={{ minHeight: '1.5rem', padding: '0.125rem 0' }}>
+          <motion.div 
+            key={num} 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: num * 0.05 }}
+            className="text-right pr-2" 
+            style={{ minHeight: '1.5rem', padding: '0.125rem 0' }}
+          >
             {num}
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Code Content */}
       <div className="flex-1 p-4 font-mono text-sm overflow-auto">
         <pre className="whitespace-pre-wrap">
           <code className="text-[#d4d4d4]">
             {typedText.split('\n').map((line, index) => (
-              <div key={index} style={{ minHeight: '1.5rem', padding: '0.125rem 0' }}>
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2, delay: index * 0.05 }}
+                whileHover={{ x: 4, transition: { duration: 0.1 } }}
+                style={{ minHeight: '1.5rem', padding: '0.125rem 0' }}
+              >
                 {line.includes('//') ? (
                   <span className="text-[#6a9955]">{line}</span>
                 ) : line.includes('const') || line.includes('export') ? (
@@ -81,47 +99,115 @@ export default developer;`;
                 ) : (
                   <span className="text-[#d4d4d4]">{line}</span>
                 )}
-              </div>
+              </motion.div>
             ))}
-            <span className="animate-pulse">|</span>
+            <motion.span 
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+              className="inline-block"
+            >
+              |
+            </motion.span>
           </code>
-        </pre>        {/* Profile Card */}
-        <div className="mt-8 bg-[#252526] rounded-lg border border-[#2d2d30] p-6 w-full max-w-[600px] mx-auto animate-fade-in">
-          <div className="flex items-center space-x-4 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-[#0078d4] to-[#106ebe] rounded-full flex items-center justify-center">
+        </pre>
+
+        {/* Profile Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="mt-8 bg-[#252526] rounded-lg border border-[#2d2d30] p-6 w-full max-w-[600px] mx-auto"
+        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center space-x-4 mb-6"
+          >
+            <motion.div 
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="w-16 h-16 bg-gradient-to-br from-[#0078d4] to-[#106ebe] rounded-full flex items-center justify-center"
+            >
               <User className="w-8 h-8 text-white" />
-            </div>
+            </motion.div>
             <div>
-              <h3 className="text-lg font-semibold text-white">Your Name</h3>
-              <p className="text-[#cccccc]">Full Stack Developer</p>
+              <motion.h3 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-lg font-semibold text-white"
+              >
+                Your Name
+              </motion.h3>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-[#cccccc]"
+              >
+                Full Stack Developer
+              </motion.p>
             </div>
-          </div>
-            <div className="space-y-2 mb-6">
-            <div className="flex items-center space-x-2 text-[#cccccc]">
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-2 mb-6"
+          >
+            <motion.div 
+              whileHover={{ x: 4, transition: { duration: 0.1 } }}
+              className="flex items-center space-x-2 text-[#cccccc]"
+            >
               <MapPin className="w-4 h-4" />
               <span className="text-sm">Your City, Country</span>
-            </div>
-            <div className="flex items-center space-x-2 text-[#cccccc]">
+            </motion.div>
+            <motion.div 
+              whileHover={{ x: 4, transition: { duration: 0.1 } }}
+              className="flex items-center space-x-2 text-[#cccccc]"
+            >
               <Calendar className="w-4 h-4" />
               <span className="text-sm">X+ years experience</span>
-            </div>
-          </div>          <div className="grid grid-cols-4 gap-4">
-            <button className="flex items-center justify-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-4 py-2 rounded transition-colors">
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="grid grid-cols-4 gap-4"
+          >
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-4 py-2 rounded transition-colors"
+            >
               <Github className="w-4 h-4" />
               <span className="text-sm">GitHub</span>
-            </button>
-            <button className="flex items-center justify-center space-x-2 bg-[#0a66c2] hover:bg-[#004182] px-4 py-2 rounded transition-colors">
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center space-x-2 bg-[#0a66c2] hover:bg-[#004182] px-4 py-2 rounded transition-colors"
+            >
               <Linkedin className="w-4 h-4" />
               <span className="text-sm">LinkedIn</span>
-            </button>
-            <button className="flex items-center justify-center space-x-2 bg-[#ea4335] hover:bg-[#d23725] px-4 py-2 rounded transition-colors">
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center space-x-2 bg-[#ea4335] hover:bg-[#d23725] px-4 py-2 rounded transition-colors"
+            >
               <Mail className="w-4 h-4" />
               <span className="text-sm">Email</span>
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 const a = document.createElement('a');
-                a.href = '/resume.pdf';  // Assuming resume.pdf is in the public folder
+                a.href = '/resume.pdf';
                 a.download = 'resume.pdf';
                 a.click();
               }}
@@ -129,9 +215,9 @@ export default developer;`;
             >
               <FileText className="w-4 h-4" />
               <span className="text-sm">Resume</span>
-            </button>
-          </div>
-        </div>
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

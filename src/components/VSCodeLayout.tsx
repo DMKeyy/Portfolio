@@ -12,7 +12,6 @@ const VSCodeLayout = () => {
   const [openTabs, setOpenTabs] = useState(['about.tsx', 'projects.ts', 'contact.md']);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -89,7 +88,8 @@ const VSCodeLayout = () => {
         
         {/* Editor Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Tab Bar */}          <TabBar 
+          {/* Tab Bar */}
+          <TabBar 
             openTabs={openTabs} 
             activeTab={activeTab} 
             onTabClick={setActiveTab}
@@ -104,18 +104,9 @@ const VSCodeLayout = () => {
             {renderActiveTab()}
           </div>
           
-          {/* Terminal - Rendered outside the scrollable area */}
+          {/* Terminal */}
           {showTerminal && (
-            <div
-              className={`
-                fixed bottom-0 left-64 md:left-48 lg:left-64 right-0
-                border-t border-l border-[#2d2d30]
-                transform
-                ${isAnimating ? 'translate-y-full' : 'translate-y-0'}
-              `}
-            >
-              <Terminal onClose={() => setShowTerminal(false)} />
-            </div>
+            <Terminal onClose={() => setShowTerminal(false)} />
           )}
         </div>
       </div>
