@@ -67,10 +67,6 @@ interface TerminalProps {
   onClose?: () => void;
 }
 
-interface TerminalProps {
-  onClose?: () => void;
-}
-
 const updateTerminalHeight = (height: number) => {
   document.documentElement.style.setProperty('--terminal-height', `${height}px`);
 };
@@ -81,8 +77,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
   const [input, setInput] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
-  const [startHeight, setStartHeight] = useState(250);
-  const [previousHeight, setPreviousHeight] = useState(250);
+  const [terminalHeight, setTerminalHeight] = useState(250);
   const [isMatrixActive, setIsMatrixActive] = useState(false);
   const [matrixLines, setMatrixLines] = useState<string[]>([]);
   const matrixIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -97,14 +92,14 @@ const Terminal = ({ onClose }: TerminalProps) => {
 
   useEffect(() => {
     // Initialize terminal height CSS variable
-    updateTerminalHeight(250);
+    updateTerminalHeight(terminalHeight);
     
     // Start animation after mount
     const timer = requestAnimationFrame(() => {
       setIsAnimating(false);
     });
     return () => cancelAnimationFrame(timer);
-  }, []);
+  }, [terminalHeight]);
 
   // Matrix animation effect
   useEffect(() => {
@@ -190,24 +185,25 @@ const Terminal = ({ onClose }: TerminalProps) => {
   }, [isMinimized]);  
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (isMinimized) return; // Prevent resizing when minimized
+    if (isMinimized) return;
+    e.preventDefault();
     setIsDragging(true);
-    setStartY(e.clientY);
-    setStartHeight(terminalRef.current?.clientHeight || 250);
-  };  useEffect(() => {
+  };
+
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isDragging || isMinimized) return;
       
       const viewportHeight = window.innerHeight;
-      const maxHeight = viewportHeight - 96;
+      const maxHeight = viewportHeight - 96; // Account for title bar and menu bar
+      const minHeight = 150;
       
-      const delta = startY - e.clientY;
-      const newHeight = Math.max(150, Math.min(maxHeight, startHeight + delta));
+      // Calculate height based on cursor position from bottom of viewport
+      const heightFromBottom = viewportHeight - e.clientY;
+      const newHeight = Math.max(minHeight, Math.min(maxHeight, heightFromBottom));
       
-      if (terminalRef.current) {
-        terminalRef.current.style.height = `${newHeight}px`;
-        updateTerminalHeight(newHeight);
-      }
+      setTerminalHeight(newHeight);
+      updateTerminalHeight(newHeight);
     };
 
     const handleMouseUp = () => {
@@ -223,7 +219,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, startY, startHeight]);
+  }, [isDragging, isMinimized]);
 
   // Auto-scroll to bottom when new content is added
   useEffect(() => {
@@ -260,8 +256,14 @@ const Terminal = ({ onClose }: TerminalProps) => {
       )}
       <motion.div 
         ref={terminalRef}
-        animate={{ height: isMinimized ? 32 : startHeight }}
-        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        animate={{ height: isMinimized ? 32 : terminalHeight }}
+        transition={{ 
+          type: 'spring', 
+          damping: 20, 
+          stiffness: 300,
+          // Disable animation during dragging
+          duration: isDragging ? 0 : undefined 
+        }}
         className={`
           bg-[#1e1e1e]
           min-h-[32px]
@@ -296,11 +298,11 @@ const Terminal = ({ onClose }: TerminalProps) => {
                   if (terminalRef.current) {
                     terminalRef.current.style.height = '32px';
                   }
-                  setStartHeight(currentHeight);
+                  setTerminalHeight(currentHeight);
                 } else {
-                  updateTerminalHeight(startHeight);
+                  updateTerminalHeight(terminalHeight);
                   if (terminalRef.current) {
-                    terminalRef.current.style.height = `${startHeight}px`;
+                    terminalRef.current.style.height = `${terminalHeight}px`;
                   }
                 }
                 setIsMinimized(!isMinimized);
@@ -325,7 +327,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: isDragging ? 0 : 0.2 }}
               className="terminal-content p-3 h-[calc(100%-32px)] overflow-y-auto font-mono text-sm"
               ref={contentRef}
             >
@@ -335,7 +337,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    transition={{ duration: isDragging ? 0 : 0.2, delay: isDragging ? 0 : index * 0.05 }}
                     className={line.startsWith('$') ? 'text-[#4ec9b0]' : 'text-[#cccccc]'}
                   >
                     {line}
@@ -346,6 +348,7 @@ const Terminal = ({ onClose }: TerminalProps) => {
                     key={`matrix-${index}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
+                    transition={{ duration: isDragging ? 0 : 0.2 }}
                     className="text-[#00ff00]"
                   >
                     {line}

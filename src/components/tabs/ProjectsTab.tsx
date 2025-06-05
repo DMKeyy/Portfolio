@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Star, GitBranch, Clock, Code2, Database, Layout, Cloud } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Skill {
@@ -22,84 +21,56 @@ interface Project {
   lastUpdated: string;
 }
 
-const skills: Skill[] = [
+
+const projects: Project[] = [
   {
-    category: "Frontend",
-    icon: <Layout className="w-4 h-4" />,
-    items: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Redux"]
+    id: 1,
+    name: "Eureka",
+    description: "An educational Quiz game to make learning fun",
+    tech: ["Java", "JavaFX", "MySQL"],
+    github: "https://github.com/DMKeyy/eureka",
+    demo: "#",
+    stars: 2,
+    forks: 0,
+    status: "Completed",
+    lastUpdated: "2025"
   },
   {
-    category: "Backend",
-    icon: <Code2 className="w-4 h-4" />,
-    items: ["Node.js", "Express", "Python", "Django", "REST APIs"]
+    id: 2,
+    name: "Teacher Preference Form",
+    description: "An application for managing teachers teaching preferences and requests",
+    tech: ["React", "TypeScript", "Spring Boot", "PostgreSQL"],
+    github: "https://github.com/DMKeyy/Gestion-des-Fiches-de-voeux-des-enseignants",
+    demo: "#",
+    stars: 0,
+    forks: 0,
+    status: "Completed",
+    lastUpdated: "2025"
   },
   {
-    category: "Database",
-    icon: <Database className="w-4 h-4" />,
-    items: ["PostgreSQL", "MongoDB", "MySQL", "Redis"]
-  },
-  {
-    category: "DevOps",
-    icon: <Cloud className="w-4 h-4" />,
-    items: ["Docker", "AWS", "CI/CD", "Git", "Linux"]
+    id: 3,
+    name: "Medical Office Management System",
+    description: "A comprehensive medical office management system",
+    tech: ["Java"],
+    github: "https://github.com/DMKeyy/Gestion-Cabinet-Medical",
+    demo: "#",
+    stars: 1,
+    forks: 0,
+    status: "In Progress",
+    lastUpdated: "2024"
   }
 ];
 
-// Example fetch function
-const fetchProjects = async (): Promise<Project[]> => {
-  // This could be your actual API call
-  return [
-    {
-      id: 1,
-      name: "E-Commerce Platform",
-      description: "Full-stack solution with modern architecture",
-      tech: ["React", "Node.js", "PostgreSQL", "Docker"],
-      github: "#",
-      demo: "#",
-      stars: 25,
-      forks: 12,
-      status: "Completed",
-      lastUpdated: "2 days ago"
-    },
-    {
-      id: 2,
-      name: "Task Management App",
-      description: "Collaborative task management with real-time updates using WebSocket",
-      tech: ["Next.js", "TypeScript", "PostgreSQL", "Prisma", "Socket.io"],
-      github: "#",
-      demo: "#",
-      stars: 28,
-      forks: 8,
-      status: "Completed",
-      lastUpdated: "1 week ago"
-    },
-    {
-      id: 3,
-      name: "Weather Dashboard",
-      description: "Beautiful weather dashboard with data visualization and forecasts",
-      tech: ["Vue.js", "Chart.js", "OpenWeather API", "Tailwind CSS"],
-      github: "#",
-      demo: "#",
-      stars: 15,
-      forks: 4,
-      status: "In Progress",
-      lastUpdated: "3 days ago"
-    }
-  ];
-};
-
 const ProjectsTab = () => {
-  const [selectedProject, setSelectedProject] = useState(0);
   const [lineNumbers] = useState(Array.from({ length: 25 }, (_, i) => i + 1));
   const [typedText, setTypedText] = useState('');
   const [skillsTyped, setSkillsTyped] = useState(false);
 
-  const skillsText = `// Developer Skills Configuration
-const skills = {
-  Frontend: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Redux"],
-  Backend: ["Node.js", "Express", "Python", "Django", "REST APIs"],
-  Database: ["PostgreSQL", "MongoDB", "MySQL", "Redis"],
-  DevOps: ["Docker", "AWS", "CI/CD", "Git", "Linux"]
+  const skillsText = `const skills = {
+  Frontend: ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Tailwind CSS"],
+  Backend: ["Node.js", "Java", "C++", "C"],
+  Database: ["PostgreSQL", "MySQL"],
+  DevOps: ["Git", "GitHub"]
 };`;
 
   const projectsText = `// My Projects - Building the future, one commit at a time`;
@@ -119,16 +90,6 @@ const skills = {
 
     return () => clearInterval(timer);
   }, []);
-
-  // Using TanStack Query to fetch projects
-  const { data: projects = [], isLoading, error } = useQuery<Project[]>({
-    queryKey: ['projects'],
-    queryFn: fetchProjects,
-    staleTime: 1000 * 60 * 5,
-  });
-
-  if (isLoading) return <div className="p-4">Loading projects...</div>;
-  if (error) return <div className="p-4">Error loading projects</div>;
 
   return (
     <motion.div 
@@ -231,23 +192,35 @@ const skills = {
                   key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                  whileHover={{ scale: 1.02, x: 4, transition: { duration: 0.1 } }}
-                  className={`bg-[#252526] rounded-lg border border-[#2d2d30] p-6 cursor-pointer transition-all duration-300 hover:border-[#0078d4] ${
-                    selectedProject === index ? 'border-[#0078d4]' : ''
-                  }`}
-                  onClick={() => setSelectedProject(index)}
+                  whileHover={{ 
+                    scale: 1.02,
+                    boxShadow: "0 0 20px rgba(0, 120, 212, 0.2)"
+                  }}
+                  transition={{ 
+                    scale: { duration: 0.05 },
+                    boxShadow: { duration: 0.05 },
+                    default: { duration: 0 },
+                    opacity: { duration: 0.3 },
+                    y: { duration: 0.3, delay: 0.6 }
+                  }}
+                  className="bg-[#1e1e1e] rounded-lg border border-[#2d2d30] p-6 cursor-pointer transition-all duration-300 hover:border-[#0078d4] relative overflow-hidden group"
                 >
-                  <div className="flex justify-between items-start mb-3">
+                  {/* Gradient Overlay */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-br from-[#0078d4]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={false}
+                  />
+
+                  <div className="flex justify-between items-start mb-4">
                     <motion.h3 
                       whileHover={{ x: 4, transition: { duration: 0.1 } }}
-                      className="text-lg font-semibold text-white"
+                      className="text-xl font-semibold text-white group-hover:text-[#0078d4] transition-colors duration-300"
                     >
                       {project.name}
                     </motion.h3>
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className={`px-2 py-1 rounded text-xs font-medium ${
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
                         project.status === 'Active' ? 'bg-green-600/20 text-green-400' :
                         project.status === 'Completed' ? 'bg-blue-600/20 text-blue-400' :
                         'bg-yellow-600/20 text-yellow-400'
@@ -257,35 +230,64 @@ const skills = {
                     </motion.div>
                   </div>
 
-                  <p className="text-[#cccccc] text-sm mb-4 line-clamp-2">{project.description}</p>
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-[#cccccc] text-sm mb-6 line-clamp-2 group-hover:text-white transition-colors duration-300"
+                  >
+                    {project.description}
+                  </motion.p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((tech, techIndex) => (
                       <motion.span
                         key={tech}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.2, delay: 0.8 + techIndex * 0.1 }}
-                        whileHover={{ scale: 1.1, transition: { duration: 0.1 } }}
-                        className="px-2 py-1 bg-[#0078d4]/10 border border-[#0078d4]/30 rounded text-xs text-[#61dafb] hover:bg-[#0078d4]/20 transition-colors"
+                        whileHover={{ 
+                          scale: 1.1,
+                          backgroundColor: "rgba(0, 120, 212, 0.2)",
+                          boxShadow: "0 0 15px rgba(97, 218, 251, 0.5)"
+                        }}
+                        transition={{ 
+                          default: { duration: 0.05 },
+                          scale: { duration: 0.05 },
+                          backgroundColor: { duration: 0.05 },
+                          boxShadow: { duration: 0.05 },
+                          opacity: { duration: 0.2, delay: 0.8 + techIndex * 0.1 }
+                        }}
+                        className="px-3 py-1.5 bg-[#0078d4]/10 border border-[#0078d4]/30 rounded-full text-xs text-[#61dafb] hover:border-[#0078d4] transition-all duration-300 relative overflow-hidden group"
                       >
-                        {tech}
+                        <motion.span
+                          className="absolute inset-0 bg-[#61dafb]/20 opacity-0 group-hover:opacity-100"
+                          initial={false}
+                          animate={{ 
+                            boxShadow: ["0 0 5px rgba(97, 218, 251, 0.5)", "0 0 20px rgba(97, 218, 251, 0.8)", "0 0 5px rgba(97, 218, 251, 0.5)"],
+                          }}
+                          transition={{ 
+                            duration: 0.5,
+                            repeat: Infinity,
+                            repeatType: "reverse"
+                          }}
+                        />
+                        <span className="relative z-10">{tech}</span>
                       </motion.span>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-[#888888] mb-4">
+                  <div className="flex items-center justify-between text-sm text-[#888888] mb-6">
                     <div className="flex items-center space-x-4">
                       <motion.div 
                         whileHover={{ scale: 1.1, transition: { duration: 0.1 } }}
-                        className="flex items-center space-x-1"
+                        className="flex items-center space-x-1 group-hover:text-white transition-colors duration-300"
                       >
                         <Star className="w-4 h-4" />
                         <span>{project.stars}</span>
                       </motion.div>
                       <motion.div 
                         whileHover={{ scale: 1.1, transition: { duration: 0.1 } }}
-                        className="flex items-center space-x-1"
+                        className="flex items-center space-x-1 group-hover:text-white transition-colors duration-300"
                       >
                         <GitBranch className="w-4 h-4" />
                         <span>{project.forks}</span>
@@ -293,7 +295,7 @@ const skills = {
                     </div>
                     <motion.div 
                       whileHover={{ scale: 1.1, transition: { duration: 0.1 } }}
-                      className="flex items-center space-x-1"
+                      className="flex items-center space-x-1 group-hover:text-white transition-colors duration-300"
                     >
                       <Clock className="w-4 h-4" />
                       <span>{project.lastUpdated}</span>
@@ -301,60 +303,80 @@ const skills = {
                   </div>
 
                   <div className="flex space-x-3">
-                    <motion.button 
-                      whileHover={{ scale: 1.05, transition: { duration: 0.1 } }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-3 py-2 rounded transition-colors text-sm"
+                    <motion.a 
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ 
+                        scale: 1.05,
+                        backgroundColor: "#2ea043",
+                        transition: { duration: 0.05 }
+                      }}
+                      whileTap={{ 
+                        scale: 0.95,
+                        backgroundColor: "#238636",
+                        transition: { duration: 0.05 }
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ 
+                        duration: 0.3,
+                        delay: 0.8 + index * 0.1,
+                        scale: { duration: 0.05 },
+                        backgroundColor: { duration: 0.05 }
+                      }}
+                      className="flex items-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded-full transition-all duration-300 text-sm cursor-pointer relative overflow-hidden group"
                     >
+                      <motion.span
+                        className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
+                        initial={false}
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ 
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          ease: "linear"
+                        }}
+                      />
                       <Github className="w-4 h-4" />
-                      <span>Code</span>
-                    </motion.button>
+                      <span>View Code</span>
+                    </motion.a>
                     <motion.button 
-                      whileHover={{ scale: 1.05, transition: { duration: 0.1 } }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-3 py-2 rounded transition-colors text-sm"
+                      whileHover={{ 
+                        scale: 1.05,
+                        backgroundColor: "#106ebe",
+                        transition: { duration: 0.05 }
+                      }}
+                      whileTap={{ 
+                        scale: 0.95,
+                        backgroundColor: "#0078d4",
+                        transition: { duration: 0.05 }
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ 
+                        duration: 0.3,
+                        delay: 0.9 + index * 0.1,
+                        scale: { duration: 0.05 },
+                        backgroundColor: { duration: 0.05 }
+                      }}
+                      className="flex items-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
                     >
+                      <motion.span
+                        className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
+                        initial={false}
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ 
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          ease: "linear"
+                        }}
+                      />
                       <ExternalLink className="w-4 h-4" />
-                      <span>Demo</span>
+                      <span>Live Demo</span>
                     </motion.button>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Project Stats */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.7 }}
-            className="mt-8 bg-[#252526] rounded-lg border border-[#2d2d30] p-6"
-          >
-            <motion.h3 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="text-lg font-semibold text-white mb-4"
-            >
-              Project Statistics
-            </motion.h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { value: '12', label: 'Total Projects', color: '#0078d4' },
-                { value: '8', label: 'Completed', color: '#28a745' },
-                { value: '3', label: 'In Progress', color: '#ffc107' },
-                { value: '85', label: 'Total Stars', color: '#17a2b8' }
-              ].map((stat, index) => (
-                <motion.div 
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.9 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="text-center"
-                >
-                  <div className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</div>
-                  <div className="text-sm text-[#888888]">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
