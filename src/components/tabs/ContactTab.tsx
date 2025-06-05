@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Github, Linkedin, Twitter, Send, MapPin, Phone, Calendar } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ContactTab = () => {
@@ -55,37 +55,6 @@ const Contact = {
       [e.target.name]: e.target.value
     });
   };
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: "Email",
-      value: "your.email@example.com",
-      href: "mailto:your.email@example.com",
-      color: "#ea4335"
-    },
-    {
-      icon: Github,
-      label: "GitHub",
-      value: "@yourusername",
-      href: "https://github.com/yourusername",
-      color: "#333"
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      value: "Your Name",
-      href: "https://linkedin.com/in/yourname",
-      color: "#0a66c2"
-    },
-    {
-      icon: Twitter,
-      label: "Twitter",
-      value: "@yourusername",
-      href: "https://twitter.com/yourusername",
-      color: "#1da1f2"
-    }
-  ];
 
   return (
     <motion.div 

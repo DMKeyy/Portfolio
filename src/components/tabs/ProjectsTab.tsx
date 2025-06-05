@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ExternalLink, Github, Star, GitBranch, Clock, Code2, Database, Layout, Cloud } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-interface Skill {
-  category: string;
-  icon: React.ReactNode;
-  items: string[];
-}
+import { useState, useEffect } from 'react';
+import { ExternalLink, Github, Star, GitBranch, Clock} from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Project {
   id: number;
