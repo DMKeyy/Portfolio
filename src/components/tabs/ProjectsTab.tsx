@@ -319,7 +319,7 @@ const ProjectsTab = () => {
                         scale: { duration: 0.05 },
                         backgroundColor: { duration: 0.05 }
                       }}
-                      className="flex items-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded-full transition-all duration-300 text-sm cursor-pointer relative overflow-hidden group"
+                      className="flex items-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded transition-all duration-300 text-sm cursor-pointer relative overflow-hidden group"
                     >
                       <motion.span
                         className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
@@ -335,41 +335,6 @@ const ProjectsTab = () => {
                       <Github className="w-4 h-4" />
                       <span>View Code</span>
                     </motion.a>
-                    <motion.button 
-                      whileHover={{ 
-                        scale: 1.05,
-                        backgroundColor: "#106ebe",
-                        transition: { duration: 0.05 }
-                      }}
-                      whileTap={{ 
-                        scale: 0.95,
-                        backgroundColor: "#0078d4",
-                        transition: { duration: 0.05 }
-                      }}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ 
-                        duration: 0.3,
-                        delay: 0.9 + index * 0.1,
-                        scale: { duration: 0.05 },
-                        backgroundColor: { duration: 0.05 }
-                      }}
-                      className="flex items-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
-                    >
-                      <motion.span
-                        className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
-                        initial={false}
-                        animate={{ x: ["-100%", "100%"] }}
-                        transition={{ 
-                          duration: 1,
-                          repeat: Infinity,
-                          repeatType: "loop",
-                          ease: "linear"
-                        }}
-                      />
-                      <ExternalLink className="w-4 h-4" />
-                      <span>Live Demo</span>
-                    </motion.button>
                   </div>
                 </motion.div>
               ))}

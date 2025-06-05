@@ -206,7 +206,7 @@ export default developer;`;
                 transition: { duration: 0.05 }
               }}
               onClick={() => window.open('https://github.com/DMKeyy', '_blank')}
-              className="flex items-center justify-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
+              className="flex items-center justify-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded transition-all duration-300 text-sm relative overflow-hidden group"
             >
               <motion.span
                 className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
@@ -234,7 +234,7 @@ export default developer;`;
                 transition: { duration: 0.05 }
               }}
               onClick={() => window.open('https://www.linkedin.com/in/haiouani-anis/', '_blank')}
-              className="flex items-center justify-center space-x-2 bg-[#0a66c2] hover:bg-[#004182] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
+              className="flex items-center justify-center space-x-2 bg-[#0a66c2] hover:bg-[#004182] px-4 py-2 rounded transition-all duration-300 text-sm relative overflow-hidden group"
             >
               <motion.span
                 className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
@@ -262,7 +262,7 @@ export default developer;`;
                 transition: { duration: 0.05 }
               }}
               onClick={() => window.open('mailto:haiouani.anis05@gmail.com', '_blank')}
-              className="flex items-center justify-center space-x-2 bg-[#ea4335] hover:bg-[#d23725] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
+              className="flex items-center justify-center space-x-2 bg-[#ea4335] hover:bg-[#d23725] px-4 py-2 rounded transition-all duration-300 text-sm relative overflow-hidden group"
             >
               <motion.span
                 className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
@@ -291,11 +291,11 @@ export default developer;`;
               }}
               onClick={() => {
                 const a = document.createElement('a');
-                a.href = '/resume.pdf';
-                a.download = 'resume.pdf';
+                a.href = '/my-resume.pdf';
+                a.download = 'my-resume.pdf';
                 a.click();
               }}
-              className="flex items-center justify-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded-full transition-all duration-300 text-sm relative overflow-hidden group"
+              className="flex items-center justify-center space-x-2 bg-[#238636] hover:bg-[#2ea043] px-4 py-2 rounded transition-all duration-300 text-sm relative overflow-hidden group"
             >
               <motion.span
                 className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"

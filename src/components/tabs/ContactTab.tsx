@@ -12,6 +12,8 @@ const ContactTab = () => {
   const [typedText, setTypedText] = useState('');
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [lineNumbers, setLineNumbers] = useState<number[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const fullText = `// Contact Me
 // Let's build something amazing together!
@@ -44,9 +46,47 @@ const Contact = {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: '7812f63a-9749-44e0-9af0-1025abab6e7c', // Replace with your Web3Forms access key
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: formData.name,
+          reply_to: formData.email
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -153,6 +193,26 @@ const Contact = {
               <span>Send Message</span>
             </motion.h3>
 
+            {submitStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded text-green-400 text-sm"
+              >
+                Message sent successfully! I'll get back to you soon.
+              </motion.div>
+            )}
+
+            {submitStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded text-red-400 text-sm"
+              >
+                Failed to send message. Please try again later.
+              </motion.div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
@@ -176,6 +236,7 @@ const Contact = {
                       onChange={handleChange}
                       className="w-full bg-[#1e1e1e] border border-[#2d2d30] rounded px-3 py-2 text-[#cccccc] focus:border-[#0078d4] focus:outline-none transition-colors"
                       required
+                      disabled={isSubmitting}
                     />
                   </motion.div>
                 ))}
@@ -197,6 +258,7 @@ const Contact = {
                   onChange={handleChange}
                   className="w-full bg-[#1e1e1e] border border-[#2d2d30] rounded px-3 py-2 text-[#cccccc] focus:border-[#0078d4] focus:outline-none transition-colors"
                   required
+                  disabled={isSubmitting}
                 />
               </motion.div>
 
@@ -216,6 +278,7 @@ const Contact = {
                   rows={4}
                   className="w-full bg-[#1e1e1e] border border-[#2d2d30] rounded px-3 py-2 text-[#cccccc] focus:border-[#0078d4] focus:outline-none transition-colors resize-none"
                   required
+                  disabled={isSubmitting}
                 />
               </motion.div>
 
@@ -226,10 +289,13 @@ const Contact = {
                 whileHover={{ scale: 1.05, transition: { duration: 0.1 } }}
                 whileTap={{ scale: 0.95 }}
                 type="submit"
-                className="w-full bg-[#0078d4] hover:bg-[#106ebe] text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center space-x-2"
+                disabled={isSubmitting}
+                className={`w-full bg-[#0078d4] hover:bg-[#106ebe] text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center space-x-2 ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
                 <Send className="w-4 h-4" />
-                <span>Send Message</span>
+                <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
               </motion.button>
             </form>
           </motion.div>
