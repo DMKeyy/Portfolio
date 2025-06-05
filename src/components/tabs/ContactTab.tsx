@@ -21,7 +21,7 @@ const ContactTab = () => {
 const Contact = {
   Email: "haiouani.anis05@gmail.com",
   Github: "github.com/DMKeyy",
-  Linkedin: "linkedin.com/in/yourname"
+  Linkedin: "linkedin.com/in/haiouani-anis"
 };`;
 
   useEffect(() => {
