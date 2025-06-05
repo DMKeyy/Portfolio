@@ -16,8 +16,6 @@
 
 A modern, VS Code-inspired portfolio website showcasing projects and skills in an interactive IDE-like interface. Built with cutting-edge web technologies for a unique developer experience.
 
-**🔗 Live Demo**: [View Portfolio](https://lovable.dev/projects/e908687b-a882-4e75-b29b-e290e18625b2)
-
 ## ✨ Features
 
 - 🎯 **VS Code-Inspired Interface** - Familiar developer experience with a modern twist
@@ -48,13 +46,6 @@ npm run dev
 
 # Build for production
 npm run build
-```
-
-### 🔄 Real-time Development with Lovable
-
-1. Visit [Lovable Project](https://lovable.dev/projects/e908687b-a882-4e75-b29b-e290e18625b2)
-2. Start editing with AI assistance
-3. Changes are automatically committed
 ```
 
 ### ☁️ Cloud Development
@@ -91,14 +82,15 @@ npm run build
 ## 🚀 Deployment
 
 ### Quick Deploy
-1. Open [Lovable](https://lovable.dev/projects/e908687b-a882-4e75-b29b-e290e18625b2)
-2. Navigate to Share → Publish
-3. Your site is live! 🎉
+1. Build your project: `npm run build`
+2. Choose your preferred hosting platform (Vercel, Netlify, GitHub Pages, etc.)
+3. Follow the platform's deployment instructions
+4. Your site is live! 🎉
 
 ### Custom Domain Setup
-1. Go to Project → Settings → Domains
-2. Click "Connect Domain"
-3. Follow the [domain setup guide](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. Purchase a domain from your preferred domain registrar
+2. Configure DNS settings according to your hosting platform's instructions
+3. Set up SSL certificates for secure HTTPS connection
 
 ## 📦 Project Structure
 
@@ -128,6 +120,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 <div align="center">
 
-Made with ❤️ using [Lovable](https://lovable.dev)
+Made with ❤️ using React, TypeScript, and Tailwind CSS
 
 </div>
