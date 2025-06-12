@@ -1,20 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Github, Star, GitBranch, Clock} from 'lucide-react';
+import { ExternalLink, Github, Star, GitBranch, Clock, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  tech: string[];
-  github: string;
-  demo: string;
-  stars: number;
-  forks: number;
-  status: string;
-  lastUpdated: string;
-}
-
+import Modal from '@/components/ui/Modal';
+import ProjectDetail from '@/components/projects/ProjectDetail';
+import { Project } from '@/types/project';
 
 const projects: Project[] = [
   {
@@ -27,7 +16,10 @@ const projects: Project[] = [
     stars: 2,
     forks: 0,
     status: "Completed",
-    lastUpdated: "2025"
+    lastUpdated: "2025",
+    screenshots: ["/projects/eureka-1.png", "/projects/eureka-2.png"],
+    detailedDescription: "Eureka is an educational quiz game designed to make learning interactive and fun. It challenges players with questions across various subjects while providing an engaging user experience with JavaFX animations and responsive design.",
+    features: ["Multiple choice questions", "Score tracking", "Time-limited challenges", "Learning statistics", "Custom quiz creation"]
   },
   {
     id: 2,
@@ -39,7 +31,10 @@ const projects: Project[] = [
     stars: 0,
     forks: 0,
     status: "Completed",
-    lastUpdated: "2025"
+    lastUpdated: "2025",
+    screenshots: ["/projects/teacher-form-1.png", "/projects/teacher-form-2.png"],
+    detailedDescription: "This application streamlines the process of collecting and managing teaching preferences from faculty members. It provides an intuitive interface for teachers to submit their course preferences and for administrators to organize teaching assignments efficiently.",
+    features: ["User authentication", "Form submission and tracking", "Admin dashboard", "Notification system", "Preference analysis tools"]
   },
   {
     id: 3,
@@ -51,7 +46,10 @@ const projects: Project[] = [
     stars: 1,
     forks: 0,
     status: "In Progress",
-    lastUpdated: "2024"
+    lastUpdated: "2024",
+    screenshots: ["/projects/medical-1.png", "/projects/medical-2.png"],
+    detailedDescription: "A Java-based medical office management system that handles patient records, appointment scheduling, billing, and inventory management for healthcare providers. The system aims to improve office efficiency and patient care coordination.",
+    features: ["Patient records management", "Appointment scheduling", "Billing and invoicing", "Inventory tracking", "Reporting and analytics"]
   }
 ];
 
@@ -59,6 +57,7 @@ const ProjectsTab = () => {
   const [lineNumbers] = useState(Array.from({ length: 25 }, (_, i) => i + 1));
   const [typedText, setTypedText] = useState('');
   const [skillsTyped, setSkillsTyped] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const skillsText = `const skills = {
   Frontend: ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Tailwind CSS"],
@@ -335,6 +334,44 @@ const ProjectsTab = () => {
                       <Github className="w-4 h-4" />
                       <span>View Code</span>
                     </motion.a>
+                    
+                    {/* See Details Button */}
+                    <motion.button 
+                      onClick={() => setSelectedProject(project)}
+                      whileHover={{ 
+                        scale: 1.05,
+                        backgroundColor: "#0078d4",
+                        transition: { duration: 0.05 }
+                      }}
+                      whileTap={{ 
+                        scale: 0.95,
+                        backgroundColor: "#106ebe",
+                        transition: { duration: 0.05 }
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ 
+                        duration: 0.3,
+                        delay: 0.9 + index * 0.1,
+                        scale: { duration: 0.05 },
+                        backgroundColor: { duration: 0.05 }
+                      }}
+                      className="flex items-center space-x-2 bg-[#0078d4] hover:bg-[#106ebe] px-4 py-2 rounded transition-all duration-300 text-sm cursor-pointer relative overflow-hidden group"
+                    >
+                      <motion.span
+                        className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100"
+                        initial={false}
+                        animate={{ x: ["-100%", "100%"] }}
+                        transition={{ 
+                          duration: 1,
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          ease: "linear"
+                        }}
+                      />
+                      <Eye className="w-4 h-4" />
+                      <span>See Details</span>
+                    </motion.button>
                   </div>
                 </motion.div>
               ))}
@@ -342,6 +379,15 @@ const ProjectsTab = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      <Modal
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+        title={selectedProject?.name || ''}
+      >
+        {selectedProject && <ProjectDetail project={selectedProject} />}
+      </Modal>
     </motion.div>
   );
 };
