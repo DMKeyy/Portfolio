@@ -4,12 +4,13 @@ import TabBar from './TabBar';
 import AboutTab from './tabs/AboutTab';
 import ProjectsTab from './tabs/ProjectsTab';
 import ContactTab from './tabs/ContactTab';
+import WelcomeScreen from './WelcomeScreen';
 import Terminal from './Terminal';
 import { X, Minus, Square, Menu } from 'lucide-react';
 
 const VSCodeLayout = () => {
-  const [activeTab, setActiveTab] = useState('about.tsx');
-  const [openTabs, setOpenTabs] = useState(['about.tsx', 'projects.ts', 'contact.md']);
+  const [activeTab, setActiveTab] = useState('');
+  const [openTabs, setOpenTabs] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -42,10 +43,17 @@ const VSCodeLayout = () => {
     setOpenTabs(newTabs);
     if (activeTab === tabName && newTabs.length > 0) {
       setActiveTab(newTabs[newTabs.length - 1]);
+    } else if (activeTab === tabName && newTabs.length === 0) {
+      setActiveTab(''); // Clear active tab when no tabs are open
     }
   };
 
   const renderActiveTab = () => {
+    // Show welcome screen when no tabs are open
+    if (openTabs.length === 0) {
+      return <WelcomeScreen onTabClick={handleTabClick} />;
+    }
+    
     switch (activeTab) {
       case 'about.tsx':
         return <AboutTab />;

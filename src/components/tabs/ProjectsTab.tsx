@@ -61,7 +61,7 @@ const ProjectsTab = () => {
 
   const skillsText = `const skills = {
   Frontend: ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Tailwind CSS"],
-  Backend: ["Node.js", "Java", "C++", "C"],
+  Backend: ["Java", "Spring Boot", "C#", "C"],
   Database: ["PostgreSQL", "MySQL"],
   DevOps: ["Git", "GitHub"]
 };`;
