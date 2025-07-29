@@ -17,8 +17,8 @@ const education = {
 const experience = [
   {
     // Current Internship
-    title: "Intern",
-    company: "Arcan",
+    title: "Cyber Security Intern",
+    company: "Arcan Networks",
     type: "Internship",
     period: "2025 - Present",
   },
