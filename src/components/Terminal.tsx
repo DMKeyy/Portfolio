@@ -16,29 +16,32 @@ const COMMANDS = {
     '  echo     - Echo back your input'
   ],
   about: () => [
-    'Hello! I\'m a passionate full-stack developer',
-    'with expertise in modern web technologies.',
-    'I love creating innovative solutions and',
-    'bringing ideas to life through code.'
+    'Hello! I\'m Haiouani Anis, a passionate Full Stack Developer',
+    'and AI Engineering student at USTHB. I love building modern',
+    'web applications, exploring new technologies, and solving',
+    'real-world problems with code. Welcome to my portfolio!'
   ],
   skills: () => [
     'Primary Skills:',
-    '• Frontend: React, Javascript , Tailwind CSS',
-    '• Backend: Node.js, Java, MySQL, PostgreSQL, C, C++',
-    '• DevOps: Git',
-    
+    '• Frontend: React, JavaScript, CSS, HTML, Tailwind CSS',
+    '• Backend: Java, Spring Boot, C#, C',
+    '• Tools: Unity, Sophos Firewall, VMware, VSCode',
+    '• Database: PostgreSQL, MySQL',
+    '• DevOps: Git, GitHub'
   ],
   projects: () => [
     'Recent Projects:',
-    '• E-Commerce Platform - Full-stack solution',
-    '• Task Management App - Real-time collaboration',
-    '• Weather Dashboard - Data visualization',
+    '• Eureka - Educational quiz game (Java, JavaFX, MySQL)',
+    '• Teacher Preference Form - Faculty management system (React, TypeScript, Spring Boot)',
+    '• Medical Office Management - Healthcare system (Java)',
+    '• Gaming Store Web Design - Modern gaming store (HTML, Tailwind CSS, React)',
+    '• Furniture Store Design - Elegant furniture showcase (HTML, Tailwind CSS, React)',
     'Visit the Projects tab for more details!'
   ],
   contact: () => [
     'Contact Information:',
     '📧 Email: haiouani.anis05@gmail.com',
-    '💼 LinkedIn: linkedin.com/in/yourname',
+    '💼 LinkedIn: linkedin.com/in/haiouani-anis',
     '🐙 GitHub: github.com/DMKeyy',
   ],
   clear: () => {

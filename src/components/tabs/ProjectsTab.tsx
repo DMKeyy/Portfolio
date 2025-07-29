@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Github, Star, GitBranch, Clock, Eye } from 'lucide-react';
+import { Github, Star, GitBranch, Clock, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Modal from '@/components/ui/Modal';
 import ProjectDetail from '@/components/projects/ProjectDetail';
@@ -7,7 +7,7 @@ import { Project } from '@/types/project';
 
 const projects: Project[] = [
   {
-    id: 1,
+    id: 3,
     name: "Eureka",
     description: "An educational Quiz game to make learning fun",
     tech: ["Java", "JavaFX", "MySQL"],
@@ -22,7 +22,7 @@ const projects: Project[] = [
     features: ["Multiple choice questions", "Score tracking", "Time-limited challenges", "Learning statistics", "Custom quiz creation"]
   },
   {
-    id: 2,
+    id: 4,
     name: "Teacher Preference Form",
     description: "An application for managing teachers teaching preferences and requests",
     tech: ["React", "TypeScript", "Spring Boot", "PostgreSQL"],
@@ -37,7 +37,7 @@ const projects: Project[] = [
     features: ["User authentication", "Form submission and tracking", "Admin dashboard", "Notification system", "Preference analysis tools"]
   },
   {
-    id: 3,
+    id: 5,
     name: "Medical Office Management System",
     description: "A comprehensive medical office management system",
     tech: ["Java"],
@@ -50,6 +50,36 @@ const projects: Project[] = [
     screenshots: ["/projects/medical-1.png", "/projects/medical-2.png"],
     detailedDescription: "A Java-based medical office management system that handles patient records, appointment scheduling, billing, and inventory management for healthcare providers. The system aims to improve office efficiency and patient care coordination.",
     features: ["Patient records management", "Appointment scheduling", "Billing and invoicing", "Inventory tracking", "Reporting and analytics"]
+  },
+  {
+    id: 1,
+    name: "Gaming Store Web Design",
+    description: "A modern and responsive web design for a gaming store",
+    tech: ["HTML", "Tailwind CSS", "React"],
+    github: "https://github.com/DMKeyy/Gaming-Store-Web-Design",
+    demo: "#",
+    stars: 0,
+    forks: 0,
+    status: "Completed",
+    lastUpdated: "2024",
+    screenshots: ["/projects/gaming-store-1.png", "/projects/gaming-store-2.png"],
+    detailedDescription: "A sleek and modern web design for a gaming store featuring responsive layout, interactive elements, and modern UI/UX principles. The design focuses on showcasing gaming products with an engaging and user-friendly interface.",
+    features: ["Responsive design", "Modern UI/UX", "Product showcase", "Interactive elements", "Gaming-themed aesthetics"]
+  },
+  {
+    id: 2,
+    name: "House Furniture Store Design",
+    description: "Elegant web design for a furniture store showcasing home decor",
+    tech: ["HTML", "Tailwind CSS", "React"],
+    github: "https://github.com/DMKeyy/House-Furniture-store-design",
+    demo: "#",
+    stars: 0,
+    forks: 0,
+    status: "Completed",
+    lastUpdated: "2024",
+    screenshots: ["/projects/furniture-store-1.png", "/projects/furniture-store-2.png"],
+    detailedDescription: "An elegant and sophisticated web design for a furniture store that emphasizes clean layouts and beautiful product presentation. The design creates a premium shopping experience for home furniture and decor items.",
+    features: ["Clean and elegant design", "Product galleries", "Category navigation", "Responsive layout", "Premium aesthetics"]
   }
 ];
 
@@ -60,8 +90,9 @@ const ProjectsTab = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const skillsText = `const skills = {
-  Frontend: ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Tailwind CSS"],
+  Frontend: ["React", "JavaScript", "CSS", "HTML", "Tailwind CSS"],
   Backend: ["Java", "Spring Boot", "C#", "C"],
+  Tools: ["Unity", "Sophos Firewall", "VMware", "VSCode"],
   Database: ["PostgreSQL", "MySQL"],
   DevOps: ["Git", "GitHub"]
 };`;
